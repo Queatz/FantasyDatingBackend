@@ -9,19 +9,16 @@ open class BaseModel {
     var id: String = ""
 }
 
-data class DiscoveryPreferences constructor(
+class DiscoveryPreferences constructor(
+    var kind: String = "discovery-preferences",
     var who: String = "",
     var where: String = "",
     var ageMin: Int = 0,
     var ageMax: Int = 0
 ) : BaseModel()
 
-data class WalkthroughStep constructor(
-    var step: String = "",
-    var shown: Boolean = false
-) : BaseModel()
-
-data class Person constructor(
+class Person constructor(
+    var kind: String = "person",
     var sex: String = "",
     var name: String = "",
     var age: Int = 0,

@@ -12,20 +12,15 @@ class InstantTypeConverter : JsonSerializer<Instant>, JsonDeserializer<Instant> 
         src: Instant,
         srcType: Type,
         context: JsonSerializationContext
-    ): JsonElement {
-        return JsonPrimitive(DateUtil.format(Date.from(src)))
-    }
+    ) = JsonPrimitive(DateUtil.format(Date.from(src)))
 
-    @Throws(JsonParseException::class)
     override fun deserialize(
         json: JsonElement,
         type: Type,
         context: JsonDeserializationContext
-    ): Instant? {
-        return try {
-            DateUtil.parse(json.asString).toInstant()
-        } catch (e: ParseException) {
-            null
-        }
+    ) = try {
+        DateUtil.parse(json.asString).toInstant()
+    } catch (e: ParseException) {
+        null
     }
 }
