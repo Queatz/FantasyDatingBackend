@@ -1,5 +1,8 @@
 package com.queatz.fantasydating
 
+import com.queatz.fantasydating.routes.*
+import com.queatz.fantasydating.util.InstantTypeConverter
+import com.queatz.on.On
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -8,17 +11,10 @@ import io.ktor.features.Compression
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
-import io.ktor.http.HttpStatusCode
-import io.ktor.response.respond
 import io.ktor.routing.get
+import io.ktor.routing.post
 import io.ktor.routing.routing
-import java.text.DateFormat
-import java.time.LocalDate
-
-data class Model(val name: String, val items: List<Item>, val date: LocalDate = LocalDate.of(2018, 4, 13))
-data class Item(val key: String, val value: String)
-
-val model = Model("root", listOf(Item("A", "Apache"), Item("B", "Bing")))
+import java.time.Instant
 
 fun Application.main() {
     install(DefaultHeaders)
@@ -26,20 +22,20 @@ fun Application.main() {
     install(CallLogging)
     install(ContentNegotiation) {
         gson {
-            setDateFormat(DateFormat.LONG)
-            setPrettyPrinting()
+            registerTypeAdapter(Instant::class.java, InstantTypeConverter())
         }
     }
+
     routing {
-        get("/v1") {
-            call.respond(model)
-        }
-        get("/v1/item/{key}") {
-            val item = model.items.firstOrNull { it.key == call.parameters["key"] }
-            if (item == null)
-                call.respond(HttpStatusCode.NotFound)
-            else
-                call.respond(item)
-        }
+        get("/me") { On()<MeRoute>().get(call) }
+        get("/me/discovery-preferences") { On()<MeDiscoveryPreferencesRoute>().get(call) }
+        get("/me/feed") { On()<MeFeedRoute>().get(call) }
+        get("/me/people") { On()<MePeopleRoute>().get(call) }
+        get("/person/{id}") { On()<PersonRoute>().get(call) }
+        get("/person/{id}/messages") { On()<PersonMessagesRoute>().get(call) }
+        post("/me") { On()<MeRoute>().post(call) }
+        post("/me/discovery-preferences") { On()<MeDiscoveryPreferencesRoute>().post(call) }
+        post("/person/{id}") { On()<PersonRoute>().post(call) }
+        post("/person/{id}/messages") { On()<PersonMessagesRoute>().post(call) }
     }
 }
