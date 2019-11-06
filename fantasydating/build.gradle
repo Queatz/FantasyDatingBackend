@@ -1,0 +1,38 @@
+apply plugin: 'application'
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "io.ktor:ktor-server-core:$ktor_version"
+    implementation "io.ktor:ktor-server-netty:$ktor_version"
+    implementation "io.ktor:ktor-gson:$ktor_version"
+    implementation "ch.qos.logback:logback-classic:1.2.3"
+    implementation 'com.github.Queatz:On:0.1.4'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.arangodb:arangodb-java-driver:6.3.0'
+    implementation 'com.arangodb:velocypack-module-jdk8:1.1.0'
+    implementation group: 'com.googlecode.libphonenumber', name: 'libphonenumber', version: '8.9.2'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+apply plugin: 'kotlin'
+
+mainClassName = "io.ktor.server.netty.DevelopmentEngine"
+
+sourceSets {
+    main.kotlin.srcDirs = [ 'src' ]
+    main.resources.srcDirs = [ 'resources' ]
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+}
