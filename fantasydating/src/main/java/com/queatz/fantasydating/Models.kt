@@ -2,15 +2,19 @@ package com.queatz.fantasydating
 
 import com.arangodb.entity.DocumentField
 import com.google.gson.annotations.SerializedName
+import java.time.Instant
 
 open class BaseModel {
     @DocumentField(DocumentField.Type.KEY)
     @SerializedName(value = "id", alternate = ["_key"])
-    var id: String = ""
+    var id: String? = null
+    var created: Instant = Instant.EPOCH
+    var updated: Instant = Instant.EPOCH
 }
 
 class DiscoveryPreferences constructor(
     var kind: String = "discovery-preferences",
+    var person: String = "",
     var who: String = "",
     var where: String = "",
     var ageMin: Int = 0,

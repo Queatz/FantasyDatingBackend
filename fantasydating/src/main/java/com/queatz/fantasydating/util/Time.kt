@@ -6,9 +6,7 @@ import java.util.*
 
 class Time constructor(private val on: On) {
 
-    fun now(): Instant {
-        return Instant.now()
-    }
+    fun now(): Instant = Instant.now()
 
     init {
         System.setProperty("user.timezone", "UTC")

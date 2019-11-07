@@ -7,7 +7,7 @@ import io.ktor.response.respond
 class PersonRoute constructor(private val on: On) {
 
     suspend fun get(call: ApplicationCall) {
-        call.respond("person ")
+        call.respond("person")
     }
 
     suspend fun post(call: ApplicationCall) {

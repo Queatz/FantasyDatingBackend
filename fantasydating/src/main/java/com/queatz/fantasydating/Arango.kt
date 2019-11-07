@@ -5,10 +5,9 @@ import com.arangodb.ArangoDBException
 import com.arangodb.ArangoDatabase
 import com.arangodb.entity.CollectionType
 import com.arangodb.entity.EdgeDefinition
-import com.arangodb.model.CollectionCreateOptions
-import com.arangodb.model.GraphCreateOptions
-import com.arangodb.model.HashIndexOptions
+import com.arangodb.model.*
 import com.arangodb.velocypack.module.jdk8.VPackJdk8Module
+import com.queatz.fantasydating.util.Time
 import com.queatz.on.On
 import java.io.IOException
 import java.util.*
@@ -106,6 +105,23 @@ class Arango constructor(private val on: On) {
     fun ensureKey(id: String): String {
         val sep = id.indexOf("/")
         return if (sep != -1) id.substring(sep + 1) else id
+    }
+
+    fun <T : BaseModel> save(model: T): T? {
+        model.updated = on<Time>().now()
+
+        return try {
+            if (model.id == null) {
+                model.created = on<Time>().now()
+
+                on<Arango>().db().collection(DB_COLLECTION_ENTITIES).insertDocument(model, DocumentCreateOptions().returnNew(true)).new
+            } else {
+                on<Arango>().db().collection(DB_COLLECTION_ENTITIES).updateDocument(model.id, model, DocumentUpdateOptions().returnNew(true)).new
+            }
+        } catch (e: ArangoDBException) {
+            e.printStackTrace()
+            null
+        }
     }
 
     companion object {
