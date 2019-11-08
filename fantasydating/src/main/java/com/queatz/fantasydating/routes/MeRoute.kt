@@ -4,6 +4,7 @@ import com.queatz.fantasydating.Arango
 import com.queatz.fantasydating.Json
 import com.queatz.fantasydating.MeRequest
 import com.queatz.fantasydating.util.Me
+import com.queatz.fantasydating.util.Time
 import com.queatz.on.On
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
@@ -11,7 +12,10 @@ import io.ktor.response.respond
 
 class MeRoute constructor(private val on: On) {
     suspend fun get(call: ApplicationCall) {
-        call.respond(on<Me>().person)
+        val me = on<Me>().person
+        me.seen = on<Time>().now()
+        on<Arango>().save(me)
+        call.respond(me)
     }
 
     suspend fun post(call: ApplicationCall) {

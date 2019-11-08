@@ -19,7 +19,6 @@ class Arango constructor(private val on: On) {
     private val edges: String = DB_COLLECTION_EDGES
     private val graph: String = DB_GRAPH
 
-    private val isVolatile: Boolean = false
     private val printAql: Boolean = false
 
     private lateinit var arangoDatabase: ArangoDatabase
@@ -35,7 +34,7 @@ class Arango constructor(private val on: On) {
                 try {
                     createCollection(
                         collection,
-                        CollectionCreateOptions().isVolatile(isVolatile)
+                        CollectionCreateOptions()
                     )
                 } catch (ignored: ArangoDBException) {
                     // Whatever
@@ -44,7 +43,7 @@ class Arango constructor(private val on: On) {
                 try {
                     createCollection(
                         edges,
-                        CollectionCreateOptions().type(CollectionType.EDGES).isVolatile(isVolatile)
+                        CollectionCreateOptions().type(CollectionType.EDGES)
                     )
                 } catch (ignored: ArangoDBException) {
                     // Whatever
@@ -53,16 +52,16 @@ class Arango constructor(private val on: On) {
                 try {
                     val edgeDefinitions = ArrayList<EdgeDefinition>()
                     edgeDefinitions.add(
-                        EdgeDefinition().collection(edges).from(collection).to(
-                            collection
-                        )
+                        EdgeDefinition().collection(edges)
+                            .from(collection)
+                            .to(collection)
                     )
                     createGraph(graph, edgeDefinitions, GraphCreateOptions())
                 } catch (ignored: ArangoDBException) {
                     // Whatever
                 }
 
-                listOf("kind").forEach { field ->
+                listOf("kind", "person", "from", "to", "updated", "created").forEach { field ->
                     val index = HashSet<String>()
                     index.add(field)
                     collection(DB_COLLECTION_ENTITIES).ensureHashIndex(index, HashIndexOptions())
@@ -114,9 +113,11 @@ class Arango constructor(private val on: On) {
             if (model.id == null) {
                 model.created = on<Time>().now()
 
-                on<Arango>().db().collection(DB_COLLECTION_ENTITIES).insertDocument(model, DocumentCreateOptions().returnNew(true)).new
+                on<Arango>().db().collection(DB_COLLECTION_ENTITIES)
+                    .insertDocument(model, DocumentCreateOptions().returnNew(true)).new
             } else {
-                on<Arango>().db().collection(DB_COLLECTION_ENTITIES).updateDocument(model.id, model, DocumentUpdateOptions().returnNew(true)).new
+                on<Arango>().db().collection(DB_COLLECTION_ENTITIES)
+                    .updateDocument(model.id, model, DocumentUpdateOptions().returnNew(true)).new
             }
         } catch (e: ArangoDBException) {
             e.printStackTrace()
@@ -129,8 +130,8 @@ class Arango constructor(private val on: On) {
         private const val DB_PASS = "fantasy"
         private const val DB_DATABASE = "fantasy"
 
-        private const val DB_COLLECTION_ENTITIES = "entities"
-        private const val DB_COLLECTION_EDGES = "edges"
-        private const val DB_GRAPH = "graph"
+        const val DB_COLLECTION_ENTITIES = "entities"
+        const val DB_COLLECTION_EDGES = "edges"
+        const val DB_GRAPH = "graph"
     }
 }

@@ -6,8 +6,8 @@ import com.queatz.on.On
 import io.ktor.application.ApplicationCall
 import io.ktor.response.respond
 
-class MePeopleRoute constructor(private val on: On) {
+class MeEventsRoute constructor(private val on: On) {
     suspend fun get(call: ApplicationCall) {
-        call.respond(on<Db>().getPeople(on<Me>().person.id!!))
+        call.respond(on<Db>().getEvents(on<Me>().person.id!!))
     }
 }

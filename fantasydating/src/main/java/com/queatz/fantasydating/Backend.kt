@@ -49,7 +49,7 @@ fun Application.main() {
     routing {
         get("/me") { call.attributes[OnAttributeKey]<MeRoute>().get(call) }
         get("/me/discovery-preferences") { call.attributes[OnAttributeKey]<MeDiscoveryPreferencesRoute>().get(call) }
-        get("/me/feed") { call.attributes[OnAttributeKey]<MeFeedRoute>().get(call) }
+        get("/me/events") { call.attributes[OnAttributeKey]<MeEventsRoute>().get(call) }
         get("/me/people") { call.attributes[OnAttributeKey]<MePeopleRoute>().get(call) }
         get("/person/{id}") { call.attributes[OnAttributeKey]<PersonRoute>().get(call) }
         get("/person/{id}/messages") { call.attributes[OnAttributeKey]<PersonMessagesRoute>().get(call) }
