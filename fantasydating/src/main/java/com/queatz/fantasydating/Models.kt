@@ -41,8 +41,10 @@ class Person constructor(
 ) : BaseModel("person")
 
 class PersonStory constructor(
-    val story: String = "",
-    val photo: String = ""
+    var story: String = "",
+    var photo: String = "",
+    var x: Float = 0f,
+    var y: Float = 0f
 )
 
 class Event constructor(
