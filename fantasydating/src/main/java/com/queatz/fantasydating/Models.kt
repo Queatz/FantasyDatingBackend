@@ -60,7 +60,6 @@ class Message constructor(
     var attachment: String? = null
 ) : BaseModel("message")
 
-
 class Love : EdgeBaseModel("love")
 
 class Hide : EdgeBaseModel("hide")

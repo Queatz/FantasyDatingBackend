@@ -1,5 +1,5 @@
-apply plugin: 'application'
 apply plugin: 'kotlin'
+apply plugin: 'application'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -17,9 +17,9 @@ dependencies {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-apply plugin: 'kotlin'
-
 mainClassName = "io.ktor.server.netty.DevelopmentEngine"
+
+apply plugin: 'com.github.johnrengelman.shadow'
 
 sourceSets {
     main.kotlin.srcDirs = [ 'src' ]
@@ -31,8 +31,15 @@ compileKotlin {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 }
+
 compileTestKotlin {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
+    }
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': mainClassName
     }
 }

@@ -59,13 +59,13 @@ class Db constructor(private val on: On) {
 
     fun love(from: String, to: String) = on<Arango>().queryOne(
         AqlQuery.AddLove,
-        edgeParams(AqlParam.From to from, AqlParam.To to to),
+        edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
         Love::class.java
     )
 
     fun hide(from: String, to: String) = on<Arango>().queryOne(
         AqlQuery.HidePerson,
-        edgeParams(AqlParam.From to from, AqlParam.To to to),
+        edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
         Hide::class.java
     )
 

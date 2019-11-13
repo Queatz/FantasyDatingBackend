@@ -77,13 +77,15 @@ object AqlQuery {
     """
 
     const val AddLove = """UPSERT { kind: 'love', _from: @from, _to: @to }
-        INSERT { kind: 'love', _from: @from, _to: @to, meet: @meet, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()) }
+        INSERT { kind: 'love', _from: @from, _to: @to, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()) }
+        UPDATE { updated: DATE_ISO8601(DATE_NOW()) }
             IN @@collection
             RETURN NEW
     """
 
     const val HidePerson = """UPSERT { kind: 'hide', _from: @from, _to: @to }
-        INSERT { kind: 'hide', _from: @from, _to: @to, meet: @meet, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()) }
+        INSERT { kind: 'hide', _from: @from, _to: @to, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()) }
+        UPDATE { updated: DATE_ISO8601(DATE_NOW()) }
             IN @@collection
             RETURN NEW
     """
