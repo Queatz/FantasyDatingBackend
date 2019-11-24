@@ -48,7 +48,7 @@ class PersonRoute constructor(private val on: On) {
                         val report = Report(
                             person = person.id!!,
                             reporter = on<Me>().person.id!!,
-                            report = "Generic report"
+                            report = message ?: "Generic report"
                         )
 
                         call.respond(SuccessResponse(on<Arango>().save(report) != null))
