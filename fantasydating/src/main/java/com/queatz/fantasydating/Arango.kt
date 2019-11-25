@@ -61,7 +61,7 @@ class Arango constructor(private val on: On) {
                     // Whatever
                 }
 
-                listOf("kind", "person", "from", "to", "updated", "created").forEach { field ->
+                listOf("kind", "sex", "age", "person", "from", "to", "updated", "created").forEach { field ->
                     val index = HashSet<String>()
                     index.add(field)
                     collection(DB_COLLECTION_ENTITIES).ensureHashIndex(index, HashIndexOptions())

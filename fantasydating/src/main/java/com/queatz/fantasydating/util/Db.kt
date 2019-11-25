@@ -33,17 +33,22 @@ class Db constructor(private val on: On) {
         Event::class.java
     )
 
-    fun getPeople(id: String) = on<Arango>().query(
+    fun getPeople(id: String, sex: String, minAge: Int, maxAge: Int) = on<Arango>().query(
         AqlQuery.PeopleForPerson,
-        graphCollectionParams(AqlParam.Person to on<Arango>().ensureKey(id)),
-        Person::class.java
+        graphCollectionParams(
+            AqlParam.Person to on<Arango>().ensureId(id),
+            AqlParam.Sex to sex,
+            AqlParam.Min to minAge,
+            AqlParam.Max to maxAge
+        ),
+        PersonWithLove::class.java
     )
 
     fun isPersonHiddenForPerson(id: String, person: String) = on<Arango>().queryOne(
         AqlQuery.IsPersonHiddenForPerson,
         graphParams(
             AqlParam.Id to on<Arango>().ensureId(id),
-            AqlParam.Person to on<Arango>().ensureKey(person)
+            AqlParam.Person to on<Arango>().ensureId(person)
         ),
         Boolean::class.java
     )!!
@@ -63,6 +68,12 @@ class Db constructor(private val on: On) {
         Love::class.java
     )
 
+    fun unlove(from: String, to: String) = on<Arango>().queryOne(
+        AqlQuery.RemoveLove,
+        edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
+        Love::class.java
+    )
+
     fun hide(from: String, to: String) = on<Arango>().queryOne(
         AqlQuery.HidePerson,
         edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
@@ -75,7 +86,7 @@ class Db constructor(private val on: On) {
     private fun edgeParams(vararg pairs: Pair<String, String>) =
         mutableMapOf<String, Any>(AqlParam.Collection to DB_COLLECTION_EDGES).apply { putAll(pairs) }
 
-    private fun graphCollectionParams(vararg pairs: Pair<String, String>) =
+    private fun graphCollectionParams(vararg pairs: Pair<String, Any>) =
         mutableMapOf<String, Any>(AqlParam.Collection to DB_COLLECTION_ENTITIES, AqlParam.Graph to DB_GRAPH).apply { putAll(pairs) }
 
     private fun graphParams(vararg pairs: Pair<String, String>) =

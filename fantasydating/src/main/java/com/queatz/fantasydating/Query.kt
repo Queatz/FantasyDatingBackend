@@ -5,9 +5,12 @@ object AqlParam {
     const val Graph = "graph"
     const val Token = "token"
     const val Person = "person"
+    const val Sex = "sex"
     const val Id = "id"
     const val From = "from"
     const val To = "to"
+    const val Min = "min"
+    const val Max = "max"
 }
 
 object AqlQuery {
@@ -47,24 +50,54 @@ object AqlQuery {
             LIMIT 20
             RETURN message
     """
-
     const val PeopleForPerson = """
+        LET me = DOCUMENT(@person)
+        
         FOR person IN @@collection
             FILTER person.kind == 'person'
-                AND person._key != @person
+                AND person._id != @person
                 AND LENGTH(
-                    FOR personHide IN ANY person GRAPH @graph
-                        FILTER personHide._key == @person RETURN true
+                    FOR personHide, edge IN ANY person GRAPH @graph
+                        FILTER edge.kind == 'hide' AND personHide._id == @person RETURN true
                 ) == 0
+                AND LENGTH(
+                    FOR discoveryPreferences IN @@collection
+                        FILTER discoveryPreferences.kind == 'discovery-preferences'
+                            AND me.age >= discoveryPreferences.ageMin
+                            AND me.age <= discoveryPreferences.ageMax
+                            AND (
+                                discoveryPreferences.who == me.sex OR
+                                discoveryPreferences.who == 'Person'
+                            ) RETURN true
+                ) != 0
+                AND (
+                    person.sex == @sex OR
+                    @sex == 'Person'
+                )
+                AND person.age >= @min
+                AND person.age <= @max
                 SORT DATE_TIMESTAMP(person.seen) DESC
                 LIMIT 20
-                RETURN person
+                RETURN MERGE(
+                    person,
+                    {
+                        youLove: LENGTH(
+                            FOR personLove, edge IN OUTBOUND @person GRAPH @graph
+                                FILTER edge.kind == 'love' AND personLove._id == person._id RETURN true
+                        ) != 0,
+                        lovesYou: LENGTH(
+                            FOR personLove, edge IN OUTBOUND person GRAPH @graph
+                                FILTER edge.kind == 'love' AND personLove._id == @person RETURN true
+                        ) != 0
+                    }
+                )
     """
+
 
     const val IsPersonHiddenForPerson = """
         RETURN LENGTH(
-            FOR personHide IN ANY @id GRAPH @graph
-                FILTER personHide._key == @person RETURN true
+            FOR personHide, edge IN ANY @id GRAPH @graph
+                FILTER edge.kind == 'hide' AND personHide._id == @person RETURN true
         ) != 0
     """
 

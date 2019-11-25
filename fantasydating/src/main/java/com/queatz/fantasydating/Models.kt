@@ -29,7 +29,7 @@ class DiscoveryPreferences constructor(
     var ageMax: Int = 0
 ) : BaseModel("discovery-preferences")
 
-class Person constructor(
+open class Person constructor(
     var sex: String = "",
     var name: String = "",
     var age: Int = 0,

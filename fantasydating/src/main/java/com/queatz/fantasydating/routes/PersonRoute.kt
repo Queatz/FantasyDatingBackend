@@ -40,7 +40,7 @@ class PersonRoute constructor(private val on: On) {
                     if (love == true) {
                         call.respond(SuccessResponse(on<Db>().love(on<Me>().person.id!!, person.id!!) != null))
                     } else {
-                        call.respond(SuccessResponse(false))
+                        call.respond(SuccessResponse(on<Db>().unlove(on<Me>().person.id!!, person.id!!) != null))
                     }
                 }
                 report != null -> {

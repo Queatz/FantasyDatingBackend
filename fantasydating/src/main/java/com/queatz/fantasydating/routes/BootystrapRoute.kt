@@ -1,6 +1,7 @@
 package com.queatz.fantasydating.routes
 
 import com.queatz.fantasydating.Arango
+import com.queatz.fantasydating.DiscoveryPreferences
 import com.queatz.fantasydating.Person
 import com.queatz.fantasydating.PersonStory
 import com.queatz.fantasydating.util.Time
@@ -42,7 +43,8 @@ class BootystrapRoute constructor(private val on: On) {
             "Sal",
             "Liz",
             "Mary",
-            "Samantha"
+            "Samantha",
+            "Jane"
         )
 
         val stories = listOf(
@@ -76,7 +78,18 @@ class BootystrapRoute constructor(private val on: On) {
             girl.approved = true
             girl.seen = on<Time>().now()
             girl.stories = listOf(personStory(), personStory(), personStory())
-            on<Arango>().save(girl)
+
+            val savedGirl = on<Arango>().save(girl)!!
+
+            val ageMin = listOf(18, 20, 22, 24, 26, 28, 30, 35, 40).random()
+
+            on<Arango>().save(DiscoveryPreferences(
+                person = on<Arango>().ensureId(savedGirl.id!!),
+                who = listOf("Boy", "Girl", "Person").random(),
+                ageMin = ageMin,
+                ageMax = ageMin + listOf(2, 5, 10).random()
+            ))
+
             girlsCreated++
         }
 

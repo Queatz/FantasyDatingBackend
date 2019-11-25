@@ -8,6 +8,12 @@ import io.ktor.response.respond
 
 class MePeopleRoute constructor(private val on: On) {
     suspend fun get(call: ApplicationCall) {
-        call.respond(on<Db>().getPeople(on<Me>().person.id!!))
+        val discoveryPreferences = on<Me>().discoveryPreferences
+        call.respond(on<Db>().getPeople(
+            on<Me>().person.id!!,
+            discoveryPreferences.who,
+            discoveryPreferences.ageMin,
+            discoveryPreferences.ageMax
+        ))
     }
 }
