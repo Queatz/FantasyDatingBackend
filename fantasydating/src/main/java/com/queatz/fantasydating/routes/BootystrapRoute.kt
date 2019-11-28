@@ -73,9 +73,9 @@ class BootystrapRoute constructor(private val on: On) {
             girl.sex = "Girl"
             girl.age = ages.random()
             girl.active = true
+            girl.approved = true
             girl.name = names.random()
             girl.fantasy = fantasies.random()
-            girl.approved = true
             girl.seen = on<Time>().now()
             girl.stories = listOf(personStory(), personStory(), personStory())
 

@@ -37,7 +37,8 @@ open class Person constructor(
     var approved: Boolean = false,
     var active: Boolean = false,
     var fantasy: String = "",
-    var stories: List<PersonStory> = listOf()
+    var stories: List<PersonStory> = listOf(),
+    var boss: Boolean = false
 ) : BaseModel("person")
 
 class PersonStory constructor(
@@ -64,7 +65,7 @@ class Love : EdgeBaseModel("love")
 
 class Hide : EdgeBaseModel("hide")
 
-class Report constructor(
+open class Report constructor(
     var person: String = "",
     var reporter: String = "",
     var report: String = ""

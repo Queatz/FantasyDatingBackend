@@ -12,6 +12,8 @@ class Json constructor(private val on: On) {
 
     private val gson = GsonBuilder().registerTypeAdapter(Instant::class.java, InstantTypeConverter()).create()
 
+    fun to(obj: Any) = gson.toJson(obj)!!
+
     fun <T : Any> from(string: String, klass: KClass<T>): T = gson.fromJson(string, klass.java)
 
     suspend fun <T : Any> from(call: ApplicationCall, klass: KClass<T>): T = from(call.receiveText(), klass)

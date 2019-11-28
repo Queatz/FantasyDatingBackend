@@ -55,6 +55,8 @@ object AqlQuery {
         
         FOR person IN @@collection
             FILTER person.kind == 'person'
+                AND person.approved == true
+                AND person.active == true
                 AND person._id != @person
                 AND LENGTH(
                     FOR personHide, edge IN ANY person GRAPH @graph
@@ -121,5 +123,23 @@ object AqlQuery {
         UPDATE { updated: DATE_ISO8601(DATE_NOW()) }
             IN @@collection
             RETURN NEW
+    """
+
+    const val Reports = """
+        FOR report IN @@collection
+            FILTER report.kind == 'report'
+            SORT DATE_TIMESTAMP(report.created) DESC
+            LIMIT 20
+            RETURN report
+    """
+
+    const val Approvals = """
+        FOR person IN @@collection
+            FILTER person.kind == 'person'
+                AND person.active == true
+                AND person.approved == false
+            SORT DATE_TIMESTAMP(person.updated) DESC
+            LIMIT 20
+            RETURN person
     """
 }

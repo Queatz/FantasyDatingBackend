@@ -53,12 +53,14 @@ fun Application.main() {
         get("/me/people") { on<MePeopleRoute>().get(call) }
         get("/person/{id}") { on<PersonRoute>().get(call) }
         get("/person/{id}/messages") { on<PersonMessagesRoute>().get(call) }
+        get("/boss/{action}") { on<BossRoute>().get(call) }
         post("/me") { on<MeRoute>().post(call) }
         post("/me/discovery-preferences") { on<MeDiscoveryPreferencesRoute>().post(call) }
         post("/me/delete") { on<MeDeleteRoute>().post(call) }
         post("/person/{id}") { on<PersonRoute>().post(call) }
         post("/person/{id}/messages") { on<PersonMessagesRoute>().post(call) }
         post("/bootystrap") { on<BootystrapRoute>().get(call) }
+        post("/boss/{action}") { on<BossRoute>().post(call) }
     }
 }
 

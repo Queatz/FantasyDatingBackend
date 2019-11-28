@@ -9,6 +9,7 @@ import com.queatz.on.On
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
+import kotlin.math.max
 
 class MeRoute constructor(private val on: On) {
     suspend fun get(call: ApplicationCall) {
@@ -21,13 +22,29 @@ class MeRoute constructor(private val on: On) {
     suspend fun post(call: ApplicationCall) {
         val person = on<Me>().person
 
+        var needsReview = false
+
         on<Json>().from(call, MeRequest::class).apply {
             name?.let { person.name = it }
             sex?.let { person.sex = it }
-            age?.let { person.age = it }
-            fantasy?.let { person.fantasy = it }
-            stories?.let { person.stories = it }
+            age?.let { person.age = max(18, it) }
+            fantasy?.let {
+                if (person.fantasy != it) {
+                    person.fantasy = it
+                    needsReview = true
+                }
+            }
+            stories?.let {
+                if (on<Json>().to(it) != on<Json>().to(person.stories)) {
+                    person.stories = it
+                    needsReview = true
+                }
+            }
             active?.let { person.active = it }
+        }
+
+        if (needsReview) {
+            person.approved = false
         }
 
         call.respond(on<Arango>().save(person) ?: HttpStatusCode.InternalServerError)

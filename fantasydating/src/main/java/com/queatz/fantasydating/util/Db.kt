@@ -62,6 +62,18 @@ class Db constructor(private val on: On) {
         Message::class.java
     )
 
+    fun getApprovals() = on<Arango>().query(
+        AqlQuery.Approvals,
+        params(),
+        Person::class.java
+    )
+
+    fun getReports() = on<Arango>().query(
+        AqlQuery.Reports,
+        params(),
+        Report::class.java
+    )
+
     fun love(from: String, to: String) = on<Arango>().queryOne(
         AqlQuery.AddLove,
         edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
