@@ -7,3 +7,5 @@ inline infix fun Boolean.then(function: () -> Unit): Boolean {
 
     return this
 }
+
+fun Any?.isNull() = this == null

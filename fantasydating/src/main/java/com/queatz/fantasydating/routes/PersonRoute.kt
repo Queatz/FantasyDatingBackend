@@ -78,6 +78,16 @@ class PersonRoute constructor(private val on: On) {
                 }
                 hide != null -> {
                     if (hide == true) {
+                        on<Db>().unlove(on<Me>().person.id!!, person.id!!)
+
+                        if (person.lovesYou && person.youLove) {
+                            val event = Event()
+                            event.name = "${on<Me>().person.name} no longer loves you"
+                            event.person = person.id!!
+                            event.data = on<Json>().to(UnloveEventType(on<Me>().person.id!!))
+                            on<Arango>().save(event)
+                        }
+
                         call.respond(SuccessResponse(on<Db>().hide(on<Me>().person.id!!, person.id!!) != null))
                     } else {
                         call.respond(SuccessResponse(false))

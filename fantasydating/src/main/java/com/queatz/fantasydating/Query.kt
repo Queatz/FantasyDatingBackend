@@ -113,6 +113,21 @@ object AqlQuery {
                 )
     """
 
+    const val PeopleWhoLoveEachOther = """
+        FOR personYouLove, edgeYouLove IN OUTBOUND @person GRAPH @graph
+            FOR personLovesYou, edgeLovesYou IN INBOUND @person GRAPH @graph
+                FILTER edgeYouLove.kind == 'love'
+                    AND edgeLovesYou.kind == 'love'
+                    AND personYouLove == personLovesYou
+                RETURN MERGE(
+                    personYouLove,
+                    {
+                        youLove: true,
+                        lovesYou: true
+                    }
+                )
+    """
+
     const val IsPersonHiddenForPerson = """
         RETURN LENGTH(
             FOR personHide, edge IN ANY @id GRAPH @graph

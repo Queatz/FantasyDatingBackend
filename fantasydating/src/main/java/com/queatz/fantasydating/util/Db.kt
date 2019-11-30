@@ -53,6 +53,14 @@ class Db constructor(private val on: On) {
         PersonWithLove::class.java
     )
 
+    fun getPeopleWhoLoveEachOther(person: String) = on<Arango>().query(
+        AqlQuery.PeopleWhoLoveEachOther,
+        graphParams(
+            AqlParam.Person to on<Arango>().ensureId(person)
+        ),
+        PersonWithLove::class.java
+    )
+
     fun isPersonHiddenForPerson(id: String, person: String) = on<Arango>().queryOne(
         AqlQuery.IsPersonHiddenForPerson,
         graphParams(

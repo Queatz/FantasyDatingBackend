@@ -80,9 +80,11 @@ class BossRoute constructor(private val on: On) {
             event.person = person.id!!
             event.data = on<Json>().to(ProfileLiveEventType(true, action.message ?: ""))
             on<Arango>().save(event)
+
+            on<Notify>().storyChanged(person)
         } else if (action.approve == false) {
             val event = Event()
-            event.name = "Your profile is no longer live"
+            event.name = "Your profile is not ready to go live"
             event.person = person.id!!
             event.data = on<Json>().to(ProfileLiveEventType(false, action.message ?: ""))
             on<Arango>().save(event)

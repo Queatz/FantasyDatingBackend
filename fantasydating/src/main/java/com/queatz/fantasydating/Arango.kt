@@ -66,6 +66,12 @@ class Arango constructor(private val on: On) {
                     index.add(field)
                     collection(DB_COLLECTION_ENTITIES).ensureHashIndex(index, HashIndexOptions())
                 }
+
+                listOf("kind").forEach { field ->
+                    val index = HashSet<String>()
+                    index.add(field)
+                    collection(DB_COLLECTION_EDGES).ensureHashIndex(index, HashIndexOptions())
+                }
             }
 
         arangoDatabase
