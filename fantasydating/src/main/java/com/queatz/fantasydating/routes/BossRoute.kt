@@ -47,6 +47,8 @@ class BossRoute constructor(private val on: On) {
     private fun removeProfile(action: BossRemoveProfileRequest): SuccessResponse {
         val person = on<Db>().getById(action.person!!, Person::class) ?: return SuccessResponse(false)
 
+        on<Notify>().accountRemoved(person)
+
         return SuccessResponse(on<Arango>().delete(person))
     }
 

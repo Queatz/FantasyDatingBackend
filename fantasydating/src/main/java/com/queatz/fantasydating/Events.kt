@@ -20,3 +20,7 @@ data class UnloveEventType constructor(
 data class StoryUpdateEventType constructor(
     val person: String
 ) : EventType("story")
+
+data class AccountRemovedEventType constructor(
+    val person: String
+) : EventType("accountRemoved")
