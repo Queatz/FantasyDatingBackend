@@ -39,8 +39,15 @@ class BossRoute constructor(private val on: On) {
             "me" -> upgrade(on<Json>().from(call, WhoIsTheBossRequest::class))
             "approve" -> approve(on<Json>().from(call, BossApproveRequest::class))
             "report" -> report(on<Json>().from(call, BossReportRequest::class))
+            "removeProfile" -> removeProfile(on<Json>().from(call, BossRemoveProfileRequest::class))
             else -> SuccessResponse(false)
         })
+    }
+
+    private fun removeProfile(action: BossRemoveProfileRequest): SuccessResponse {
+        val person = on<Db>().getById(action.person!!, Person::class) ?: return SuccessResponse(false)
+
+        return SuccessResponse(on<Arango>().delete(person))
     }
 
     private fun report(action: BossReportRequest): SuccessResponse {

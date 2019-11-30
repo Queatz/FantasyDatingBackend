@@ -51,7 +51,7 @@ class MeRoute constructor(private val on: On) {
             val event = Event()
             event.name = "Your profile change in review"
             event.person = person.id!!
-            event.data = on<Json>().to(ProfileLiveEventType(false, "Profile changes are reviewed"))
+            event.data = on<Json>().to(ProfileLiveEventType(false, "Profile changes are always reviewed"))
             on<Arango>().save(event)
         }
 

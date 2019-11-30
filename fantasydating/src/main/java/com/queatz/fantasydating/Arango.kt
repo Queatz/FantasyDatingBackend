@@ -112,6 +112,11 @@ class Arango constructor(private val on: On) {
         return if (sep != -1) id.substring(sep + 1) else id
     }
 
+    fun <T : BaseModel> delete(model: T): Boolean {
+        on<Arango>().db().collection(DB_COLLECTION_ENTITIES).deleteDocument(model.id)
+        return true
+    }
+
     fun <T : BaseModel> save(model: T): T? {
         model.updated = on<Time>().now()
 
