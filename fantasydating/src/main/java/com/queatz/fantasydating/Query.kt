@@ -50,6 +50,24 @@ object AqlQuery {
             LIMIT 20
             RETURN message
     """
+    const val PersonForPerson = """
+        LET person = DOCUMENT(@id)
+        
+        RETURN MERGE(
+            person,
+            {
+                youLove: LENGTH(
+                    FOR personLove, edge IN OUTBOUND @person GRAPH @graph
+                        FILTER edge.kind == 'love' AND personLove._id == person._id RETURN true
+                ) != 0,
+                lovesYou: LENGTH(
+                    FOR personLove, edge IN OUTBOUND person GRAPH @graph
+                        FILTER edge.kind == 'love' AND personLove._id == @person RETURN true
+                ) != 0
+            }
+        )
+    """
+
     const val PeopleForPerson = """
         LET me = DOCUMENT(@person)
         
@@ -95,11 +113,20 @@ object AqlQuery {
                 )
     """
 
-
     const val IsPersonHiddenForPerson = """
         RETURN LENGTH(
             FOR personHide, edge IN ANY @id GRAPH @graph
                 FILTER edge.kind == 'hide' AND personHide._id == @person RETURN true
+        ) != 0
+    """
+
+    const val IsBothPeopleLoveEachOther = """
+        RETURN LENGTH(
+            FOR personLove, edge IN INBOUND @id GRAPH @graph
+                FILTER edge.kind == 'love' AND personLove._id == @person RETURN true
+        ) != 0 AND LENGTH(
+            FOR personLove, edge IN INBOUND @person GRAPH @graph
+                FILTER edge.kind == 'love' AND personLove._id == @id RETURN true
         ) != 0
     """
 
@@ -128,6 +155,7 @@ object AqlQuery {
     const val Reports = """
         FOR report IN @@collection
             FILTER report.kind == 'report'
+                AND report.resolved != true
             SORT DATE_TIMESTAMP(report.created) DESC
             LIMIT 20
             RETURN report

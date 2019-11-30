@@ -68,5 +68,6 @@ class Hide : EdgeBaseModel("hide")
 open class Report constructor(
     var person: String = "",
     var reporter: String = "",
-    var report: String = ""
+    var report: String = "",
+    var resolved: Boolean = false
 ) : BaseModel("report")

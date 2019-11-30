@@ -13,12 +13,12 @@ class PersonRoute constructor(private val on: On) {
     suspend fun get(call: ApplicationCall) {
         val person = call.parameters["id"]!!
 
-        if (on<Db>().isPersonHiddenForPerson(on<Me>().person.id!!, person)) {
+        if (on<Db>().isPersonHiddenForPerson(on<Me>().person.id!!, person) && on<Me>().person.boss.not()) {
             call.respond(HttpStatusCode.NotFound)
             return
         }
 
-        call.respond(on<Db>().getById(person, Person::class) ?: HttpStatusCode.NotFound)
+        call.respond(on<Db>().getPersonWithLove(person) ?: HttpStatusCode.NotFound)
     }
 
     suspend fun post(call: ApplicationCall) {
@@ -27,7 +27,7 @@ class PersonRoute constructor(private val on: On) {
             return
         }
 
-        val person = on<Db>().getById(call.parameters["id"]!!, Person::class)
+        val person = on<Db>().getPersonWithLove(call.parameters["id"]!!)
 
         if (person == null) {
             call.respond(HttpStatusCode.NotFound)
@@ -37,11 +37,31 @@ class PersonRoute constructor(private val on: On) {
         on<Json>().from(call, PersonRequest::class).apply {
             when {
                 love != null -> {
-                    if (love == true) {
-                        call.respond(SuccessResponse(on<Db>().love(on<Me>().person.id!!, person.id!!) != null))
+                    var success = if (love == true) {
+                        on<Db>().love(on<Me>().person.id!!, person.id!!) != null
                     } else {
-                        call.respond(SuccessResponse(on<Db>().unlove(on<Me>().person.id!!, person.id!!) != null))
+                        on<Db>().unlove(on<Me>().person.id!!, person.id!!) != null
                     }
+
+                    if (love == true && success && person.lovesYou) {
+                        run {
+                            val event = Event()
+                            event.name = "You and ${person.name} love each other"
+                            event.person = on<Me>().person.id!!
+                            event.data = on<Json>().to(LoveEventType(person.id!!))
+                            on<Arango>().save(event)
+                        }
+
+                        run {
+                            val event = Event()
+                            event.name = "You and ${on<Me>().person.name} love each other"
+                            event.person = person.id!!
+                            event.data = on<Json>().to(LoveEventType(on<Me>().person.id!!))
+                            on<Arango>().save(event)
+                        }
+                    }
+
+                    call.respond(SuccessResponse(success))
                 }
                 report != null -> {
                     if (report == true) {

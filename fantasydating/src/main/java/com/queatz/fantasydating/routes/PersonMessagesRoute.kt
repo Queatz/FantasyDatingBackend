@@ -12,11 +12,6 @@ class PersonMessagesRoute constructor(private val on: On) {
     suspend fun get(call: ApplicationCall) {
         val person = call.parameters["id"]!!
 
-        if (on<Db>().isPersonHiddenForPerson(on<Me>().person.id!!, person)) {
-            call.respond(HttpStatusCode.NotFound)
-            return
-        }
-
         call.respond(on<Db>().getMessages(on<Me>().person.id!!, person))
     }
 
@@ -24,6 +19,11 @@ class PersonMessagesRoute constructor(private val on: On) {
         val person = call.parameters["id"]!!
         if (on<Db>().isPersonHiddenForPerson(on<Me>().person.id!!, person)) {
             call.respond(HttpStatusCode.NotFound)
+            return
+        }
+
+        if (on<Db>().isBothPeopleLoveEachOther(on<Me>().person.id!!, person).not()) {
+            call.respond(SuccessResponse(false))
             return
         }
 

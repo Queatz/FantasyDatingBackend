@@ -1,8 +1,6 @@
 package com.queatz.fantasydating.routes
 
-import com.queatz.fantasydating.Arango
-import com.queatz.fantasydating.Json
-import com.queatz.fantasydating.MeRequest
+import com.queatz.fantasydating.*
 import com.queatz.fantasydating.util.Me
 import com.queatz.fantasydating.util.Time
 import com.queatz.on.On
@@ -35,16 +33,26 @@ class MeRoute constructor(private val on: On) {
                 }
             }
             stories?.let {
-                if (on<Json>().to(it) != on<Json>().to(person.stories)) {
-                    person.stories = it
+                if (person.stories.size != it.size || person.stories.zip(it).any {
+                    it.first.story != it.second.story ||
+                    it.first.photo != it.second.photo
+                }) {
                     needsReview = true
                 }
+
+                person.stories = it
             }
             active?.let { person.active = it }
         }
 
-        if (needsReview) {
+        if (needsReview && person.approved) {
             person.approved = false
+
+            val event = Event()
+            event.name = "Your profile change in review"
+            event.person = person.id!!
+            event.data = on<Json>().to(ProfileLiveEventType(false, "Profile changes are reviewed"))
+            on<Arango>().save(event)
         }
 
         call.respond(on<Arango>().save(person) ?: HttpStatusCode.InternalServerError)

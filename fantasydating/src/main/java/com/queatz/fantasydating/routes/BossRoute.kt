@@ -38,8 +38,20 @@ class BossRoute constructor(private val on: On) {
         call.respond(when (action) {
             "me" -> upgrade(on<Json>().from(call, WhoIsTheBossRequest::class))
             "approve" -> approve(on<Json>().from(call, BossApproveRequest::class))
+            "report" -> report(on<Json>().from(call, BossReportRequest::class))
             else -> SuccessResponse(false)
         })
+    }
+
+    private fun report(action: BossReportRequest): SuccessResponse {
+        val report = on<Db>().getById(action.report!!, Report::class) ?: return SuccessResponse(false)
+
+        return if (action.resolve) {
+            report.resolved = true
+            SuccessResponse(on<Arango>().save(report) != null)
+        } else {
+            SuccessResponse(false)
+        }
     }
 
     private fun upgrade(action: WhoIsTheBossRequest): SuccessResponse {
@@ -62,8 +74,18 @@ class BossRoute constructor(private val on: On) {
 
         person.approved = action.approve!!
 
-        if (action.message != null) {
-            // TODO send a message to that person from admin
+        if (action.approve == true) {
+            val event = Event()
+            event.name = "Your profile is live"
+            event.person = person.id!!
+            event.data = on<Json>().to(ProfileLiveEventType(true, action.message ?: ""))
+            on<Arango>().save(event)
+        } else if (action.approve == false) {
+            val event = Event()
+            event.name = "Your profile is no longer live"
+            event.person = person.id!!
+            event.data = on<Json>().to(ProfileLiveEventType(false, action.message ?: ""))
+            on<Arango>().save(event)
         }
 
         return SuccessResponse(on<Arango>().save(person) != null)
