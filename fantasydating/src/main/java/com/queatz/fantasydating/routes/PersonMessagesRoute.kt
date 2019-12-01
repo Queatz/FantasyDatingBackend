@@ -4,6 +4,7 @@ import com.queatz.fantasydating.*
 import com.queatz.fantasydating.util.Db
 import com.queatz.fantasydating.util.Me
 import com.queatz.on.On
+import com.queatz.pushservice.PushService
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
@@ -17,6 +18,7 @@ class PersonMessagesRoute constructor(private val on: On) {
 
     suspend fun post(call: ApplicationCall) {
         val person = call.parameters["id"]!!
+
         if (on<Db>().isPersonHiddenForPerson(on<Me>().person.id!!, person)) {
             call.respond(HttpStatusCode.NotFound)
             return
@@ -34,6 +36,12 @@ class PersonMessagesRoute constructor(private val on: On) {
                 message = message,
                 attachment = attachment
             )
+
+            on<PushService>().send(on<Db>().getPhone(person).token, on<Json>().toJsonTree(MessagePushNotification(
+                on<Me>().person.name,
+                on<Me>().person.id!!,
+                message.message!!
+            )))
 
             call.respond(SuccessResponse(on<Arango>().save(message) != null))
         }

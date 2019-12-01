@@ -185,4 +185,19 @@ object AqlQuery {
             LIMIT 20
             RETURN person
     """
+
+    const val SetPhoneToken = """UPSERT { kind: 'phone', person: @person }
+        INSERT { kind: 'phone', person: @person, token: @token, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()) }
+        UPDATE { token: @token, updated: DATE_ISO8601(DATE_NOW()) }
+            IN @@collection
+            RETURN NEW
+    """
+
+    const val GetPhone = """
+        UPSERT { kind: 'phone', person: @person }
+            INSERT { kind: 'phone', token: "", created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()) }
+            UPDATE { }
+            IN @@collection
+            RETURN NEW
+    """
 }

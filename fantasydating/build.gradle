@@ -2,11 +2,12 @@ apply plugin: 'kotlin'
 apply plugin: 'application'
 
 dependencies {
+    implementation project(':pushservice')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "io.ktor:ktor-server-core:$ktor_version"
     implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "io.ktor:ktor-gson:$ktor_version"
-    implementation "ch.qos.logback:logback-classic:1.2.3"
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'com.github.Queatz:On:0.1.4'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.arangodb:arangodb-java-driver:6.3.0'

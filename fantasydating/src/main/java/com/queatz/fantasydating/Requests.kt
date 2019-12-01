@@ -46,3 +46,8 @@ data class BossRemoveProfileRequest constructor(
 data class WhoIsTheBossRequest constructor(
     var whoIsTheBoss: String? = null
 )
+
+data class PhoneRequest constructor(
+    var token: String? = null
+)
+

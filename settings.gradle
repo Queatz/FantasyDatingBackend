@@ -1,1 +1,1 @@
-include ':fantasydating'
+include ':fantasydating', ':pushservice'

@@ -54,6 +54,11 @@ class Event constructor(
     var data: String = ""
 ) : BaseModel("event")
 
+class Phone constructor(
+    var person: String = "",
+    var token: String = ""
+) : BaseModel("phone")
+
 class Message constructor(
     var from: String = "",
     var to: String = "",

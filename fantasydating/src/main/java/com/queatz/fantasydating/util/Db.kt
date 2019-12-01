@@ -129,4 +129,19 @@ class Db constructor(private val on: On) {
 
     private fun graphParams(vararg pairs: Pair<String, String>) =
         mutableMapOf<String, Any>(AqlParam.Graph to DB_GRAPH).apply { putAll(pairs) }
+
+    fun setPhoneToken(person: String, token: String) = on<Arango>().queryOne(
+        AqlQuery.SetPhoneToken,
+        params(
+            AqlParam.Person to on<Arango>().ensureId(person),
+            AqlParam.Token to token
+        ),
+        Phone::class.java
+    )
+
+    fun getPhone(person: String) = on<Arango>().queryOne(
+        AqlQuery.GetPhone,
+        params(AqlParam.Person to on<Arango>().ensureId(person)),
+        Phone::class.java
+    )!!
 }

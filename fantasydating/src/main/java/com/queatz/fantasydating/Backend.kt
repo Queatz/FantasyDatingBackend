@@ -61,6 +61,7 @@ fun Application.main() {
         post("/person/{id}/messages") { on<PersonMessagesRoute>().post(call) }
         post("/bootystrap") { on<BootystrapRoute>().get(call) }
         post("/boss/{action}") { on<BossRoute>().post(call) }
+        post("/phone") { on<PhoneRoute>().post(call) }
     }
 }
 

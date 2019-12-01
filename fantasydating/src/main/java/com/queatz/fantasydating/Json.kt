@@ -19,5 +19,7 @@ class Json constructor(private val on: On) {
 
     fun <T : Any> from(string: String, klass: KClass<T>): T = gson.fromJson(string, klass.java)
 
+    fun toJsonTree(value: Any) = gson.toJsonTree(value)
+
     suspend fun <T : Any> from(call: ApplicationCall, klass: KClass<T>): T = from(call.receiveText(), klass)
 }
