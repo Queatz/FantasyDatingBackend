@@ -53,6 +53,8 @@ class MeRoute constructor(private val on: On) {
             event.person = person.id!!
             event.data = on<Json>().to(ProfileLiveEventType(false, "Profile changes are always reviewed"))
             on<Arango>().save(event)
+
+            on<Boss>().newStuff()
         }
 
         call.respond(on<Arango>().save(person) ?: HttpStatusCode.InternalServerError)

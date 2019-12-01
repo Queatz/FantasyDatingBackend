@@ -200,4 +200,13 @@ object AqlQuery {
             IN @@collection
             RETURN NEW
     """
+
+    const val BossPeople = """
+        FOR person IN @@collection
+            FILTER person.kind == 'person'
+            FILTER person.boss == true
+            SORT DATE_TIMESTAMP(person.seen) DESC
+            LIMIT 20
+            RETURN person
+    """
 }

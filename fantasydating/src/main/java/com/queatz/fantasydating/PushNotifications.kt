@@ -7,3 +7,8 @@ data class MessagePushNotification constructor(
     val id: String,
     val message: String
 ) : PushNotification("message")
+
+data class BossPushNotification constructor(
+    val reports: Int,
+    val approvals: Int
+) : PushNotification("boss")

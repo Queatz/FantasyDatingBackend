@@ -100,6 +100,12 @@ class Db constructor(private val on: On) {
         Report::class.java
     )
 
+    fun getBossPeople() = on<Arango>().query(
+        AqlQuery.BossPeople,
+        params(),
+        Person::class.java
+    )
+
     fun love(from: String, to: String) = on<Arango>().queryOne(
         AqlQuery.AddLove,
         edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
@@ -118,18 +124,6 @@ class Db constructor(private val on: On) {
         Hide::class.java
     )
 
-    private fun params(vararg pairs: Pair<String, String>) =
-        mutableMapOf<String, Any>(AqlParam.Collection to DB_COLLECTION_ENTITIES).apply { putAll(pairs) }
-
-    private fun edgeParams(vararg pairs: Pair<String, String>) =
-        mutableMapOf<String, Any>(AqlParam.Collection to DB_COLLECTION_EDGES).apply { putAll(pairs) }
-
-    private fun graphCollectionParams(vararg pairs: Pair<String, Any>) =
-        mutableMapOf<String, Any>(AqlParam.Collection to DB_COLLECTION_ENTITIES, AqlParam.Graph to DB_GRAPH).apply { putAll(pairs) }
-
-    private fun graphParams(vararg pairs: Pair<String, String>) =
-        mutableMapOf<String, Any>(AqlParam.Graph to DB_GRAPH).apply { putAll(pairs) }
-
     fun setPhoneToken(person: String, token: String) = on<Arango>().queryOne(
         AqlQuery.SetPhoneToken,
         params(
@@ -144,4 +138,16 @@ class Db constructor(private val on: On) {
         params(AqlParam.Person to on<Arango>().ensureId(person)),
         Phone::class.java
     )!!
+
+    private fun params(vararg pairs: Pair<String, String>) =
+        mutableMapOf<String, Any>(AqlParam.Collection to DB_COLLECTION_ENTITIES).apply { putAll(pairs) }
+
+    private fun edgeParams(vararg pairs: Pair<String, String>) =
+        mutableMapOf<String, Any>(AqlParam.Collection to DB_COLLECTION_EDGES).apply { putAll(pairs) }
+
+    private fun graphCollectionParams(vararg pairs: Pair<String, Any>) =
+        mutableMapOf<String, Any>(AqlParam.Collection to DB_COLLECTION_ENTITIES, AqlParam.Graph to DB_GRAPH).apply { putAll(pairs) }
+
+    private fun graphParams(vararg pairs: Pair<String, String>) =
+        mutableMapOf<String, Any>(AqlParam.Graph to DB_GRAPH).apply { putAll(pairs) }
 }

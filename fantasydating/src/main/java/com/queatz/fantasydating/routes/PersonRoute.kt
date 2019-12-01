@@ -72,6 +72,8 @@ class PersonRoute constructor(private val on: On) {
                         )
 
                         call.respond(SuccessResponse(on<Arango>().save(report) != null))
+
+                        on<Boss>().newStuff()
                     } else {
                         call.respond(SuccessResponse(false))
                     }
