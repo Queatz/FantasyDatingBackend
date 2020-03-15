@@ -25,7 +25,7 @@ class MeRoute constructor(private val on: On) {
         on<Json>().from(call, MeRequest::class).apply {
             name?.let { person.name = it }
             sex?.let { person.sex = it }
-            age?.let { person.age = max(18, it) }
+            age?.let { person.age = max(17, it) }
             fantasy?.let {
                 if (person.fantasy != it) {
                     person.fantasy = it
@@ -49,7 +49,7 @@ class MeRoute constructor(private val on: On) {
             person.approved = false
 
             val event = Event()
-            event.name = "Your profile change in review"
+            event.name = "Your profile change is in review"
             event.person = person.id!!
             event.data = on<Json>().to(ProfileLiveEventType(false, "Profile changes are always reviewed"))
             on<Arango>().save(event)

@@ -2,6 +2,7 @@ package com.queatz.fantasydating
 
 import com.arangodb.entity.DocumentField
 import com.google.gson.annotations.SerializedName
+import com.sun.org.apache.xpath.internal.operations.Bool
 import java.time.Instant
 
 open class BaseModel constructor(val kind: String) {
@@ -29,6 +30,14 @@ class DiscoveryPreferences constructor(
     var ageMax: Int = 0
 ) : BaseModel("discovery-preferences")
 
+class InviteCode constructor(
+    var person: String = "",
+    var code: String = "",
+    var used: Boolean = false,
+    var usedBy: String? = null,
+    var Person: Person? = null
+) : BaseModel("invite-code")
+
 open class Person constructor(
     var sex: String = "",
     var name: String = "",
@@ -36,6 +45,7 @@ open class Person constructor(
     var seen: Instant = Instant.EPOCH,
     var approved: Boolean = false,
     var active: Boolean = false,
+    var invited: Boolean = false,
     var fantasy: String = "",
     var stories: List<PersonStory> = listOf(),
     var boss: Boolean = false

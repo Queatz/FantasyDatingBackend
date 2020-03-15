@@ -81,7 +81,7 @@ class BootystrapRoute constructor(private val on: On) {
 
             val savedGirl = on<Arango>().save(girl)!!
 
-            val ageMin = listOf(18, 20, 22, 24, 26, 28, 30, 35, 40).random()
+            val ageMin = listOf(17, 20, 22, 24, 26, 28, 30, 35, 40).random()
 
             on<Arango>().save(DiscoveryPreferences(
                 person = on<Arango>().ensureId(savedGirl.id!!),

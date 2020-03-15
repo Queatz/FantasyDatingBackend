@@ -3,6 +3,7 @@ package com.queatz.fantasydating.routes
 import com.queatz.fantasydating.*
 import com.queatz.fantasydating.util.Db
 import com.queatz.fantasydating.util.Me
+import com.queatz.fantasydating.util.Validate
 import com.queatz.on.On
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
@@ -11,6 +12,8 @@ import io.ktor.response.respond
 class PersonRoute constructor(private val on: On) {
 
     suspend fun get(call: ApplicationCall) {
+        if (on<Validate>().respond(call)) return
+
         val person = call.parameters["id"]!!
 
         if (on<Db>().isPersonHiddenForPerson(on<Me>().person.id!!, person) && on<Me>().person.boss.not()) {
@@ -22,6 +25,8 @@ class PersonRoute constructor(private val on: On) {
     }
 
     suspend fun post(call: ApplicationCall) {
+        if (on<Validate>().respond(call)) return
+
         if (on<Db>().isPersonHiddenForPerson(on<Me>().person.id!!, call.parameters["id"]!!)) {
             call.respond(HttpStatusCode.NotFound)
             return

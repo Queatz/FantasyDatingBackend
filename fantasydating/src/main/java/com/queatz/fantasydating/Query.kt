@@ -1,6 +1,7 @@
 package com.queatz.fantasydating
 
 object AqlParam {
+    const val Value = "value"
     const val Collection = "@collection"
     const val Graph = "graph"
     const val Token = "token"
@@ -14,9 +15,19 @@ object AqlParam {
 }
 
 object AqlQuery {
+    const val GetInviteCode = """
+        FOR x IN @@collection FILTER x.kind == 'invite-code' AND x.code == @value LIMIT 1 RETURN x
+    """
+
+    const val GetInviteCodeWithPerson = """
+        FOR x IN @@collection FILTER x.kind == 'invite-code' AND x.code == @value LIMIT 1 RETURN MERGE(x, {" +
+                "   person: DOCUMENT(x.person),\n" +
+                "})
+    """
+
     const val UpsertPerson = """
         UPSERT { kind: 'person', token: @token }
-            INSERT { kind: 'person', token: @token, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()) }
+            INSERT { kind: 'person', sex: 'Person', age: 18, token: @token, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()) }
             UPDATE { updated: DATE_ISO8601(DATE_NOW()) }
             IN @@collection
             RETURN NEW

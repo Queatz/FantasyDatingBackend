@@ -1,7 +1,8 @@
 package com.queatz.fantasydating
 
 data class SuccessResponse constructor(
-    var success: Boolean = false
+    var success: Boolean = false,
+    var message: String? = null
 )
 
 class PersonWithLove constructor(
