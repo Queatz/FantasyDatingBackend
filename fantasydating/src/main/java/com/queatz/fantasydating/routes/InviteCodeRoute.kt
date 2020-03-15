@@ -30,7 +30,7 @@ class InviteCodeRoute constructor(private val on: On) {
             }
 
             if (invite.used) {
-                call.respond(SuccessResponse(false, "This invite code has already been used"))
+                call.respond(SuccessResponse(false, "That invite code has already been used"))
                 return
             }
 
