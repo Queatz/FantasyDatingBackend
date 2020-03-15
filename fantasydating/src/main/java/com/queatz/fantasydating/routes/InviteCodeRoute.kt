@@ -1,8 +1,6 @@
 package com.queatz.fantasydating.routes
 
-import com.queatz.fantasydating.Arango
-import com.queatz.fantasydating.InviteCode
-import com.queatz.fantasydating.SuccessResponse
+import com.queatz.fantasydating.*
 import com.queatz.fantasydating.util.Db
 import com.queatz.fantasydating.util.Me
 import com.queatz.fantasydating.util.Rnd
@@ -37,6 +35,14 @@ class InviteCodeRoute constructor(private val on: On) {
             invite.used = true
             invite.usedBy = me.id!!
             on<Arango>().save(invite)
+
+            on<Db>().getById(invite.person, Person::class)?.let { inviter ->
+                val event = Event()
+                event.name = "You were invited by ${inviter.name}"
+                event.person = me.id!!
+                event.data = on<Json>().to(InvitedEventType(inviter.id!!))
+                on<Arango>().save(event)
+            }
 
             me.invited = true
 
