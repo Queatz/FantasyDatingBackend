@@ -35,7 +35,7 @@ class InviteCode constructor(
     var code: String = "",
     var used: Boolean = false,
     var usedBy: String? = null,
-    var Person: Person? = null
+    var inviter: Person? = null
 ) : BaseModel("invite-code")
 
 open class Person constructor(

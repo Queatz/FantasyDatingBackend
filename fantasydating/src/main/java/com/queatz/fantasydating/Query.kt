@@ -20,9 +20,9 @@ object AqlQuery {
     """
 
     const val GetInviteCodeWithPerson = """
-        FOR x IN @@collection FILTER x.kind == 'invite-code' AND x.code == @value LIMIT 1 RETURN MERGE(x, {" +
-                "   person: DOCUMENT(x.person),\n" +
-                "})
+        FOR x IN @@collection FILTER x.kind == 'invite-code' AND x.code == @value LIMIT 1 RETURN MERGE(x, {
+           inviter: DOCUMENT(x.person)
+        })
     """
 
     const val UpsertPerson = """

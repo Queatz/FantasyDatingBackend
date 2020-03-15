@@ -12,7 +12,7 @@ import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 
-class InviteRoute constructor(private val on: On) {
+class InviteCodeRoute constructor(private val on: On) {
     suspend fun post(call: ApplicationCall) {
         call.parameters["id"]?.let {
             val me = on<Me>().person
@@ -23,6 +23,11 @@ class InviteRoute constructor(private val on: On) {
             }
 
             val invite = on<Db>().getInviteCode(it)
+
+            if (invite == null) {
+                call.respond(HttpStatusCode.NotFound)
+                return
+            }
 
             if (invite.used) {
                 call.respond(SuccessResponse(false, "This invite code has already been used"))
@@ -44,8 +49,8 @@ class InviteRoute constructor(private val on: On) {
                 person = on<Arango>().ensureId(on<Me>().person.id!!)
             )
 
-            on<Arango>().save(invite)?.id?.let {
-                call.respond(on<Db>().getInviteCodeWithPerson(it))
+            on<Arango>().save(invite)?.code?.let {
+                call.respond(on<Db>().getInviteCodeWithPerson(it) ?: HttpStatusCode.NotFound)
             } ?: let {
                 call.respond(HttpStatusCode.InternalServerError)
             }

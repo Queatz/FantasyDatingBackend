@@ -143,13 +143,13 @@ class Db constructor(private val on: On) {
         AqlQuery.GetInviteCode,
         params(AqlParam.Value to code),
         InviteCode::class.java
-    )!!
+    )
 
     fun getInviteCodeWithPerson(code: String) = on<Arango>().queryOne(
         AqlQuery.GetInviteCodeWithPerson,
         params(AqlParam.Value to code),
         InviteCode::class.java
-    )!!
+    )
 
     private fun params(vararg pairs: Pair<String, String>) =
         mutableMapOf<String, Any>(AqlParam.Collection to DB_COLLECTION_ENTITIES).apply { putAll(pairs) }

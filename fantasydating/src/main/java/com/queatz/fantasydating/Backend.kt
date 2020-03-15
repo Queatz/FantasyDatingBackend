@@ -62,8 +62,8 @@ fun Application.main() {
         post("/bootystrap") { on<BootystrapRoute>().get(call) }
         post("/boss/{action}") { on<BossRoute>().post(call) }
         post("/phone") { on<PhoneRoute>().post(call) }
-        get("/invite") { on<InviteRoute>().post(call) }
-        get("/invite/{id}") { on<InviteRoute>().post(call) }
+        post("/invite") { on<InviteCodeRoute>().post(call) }
+        post("/invite/{id}") { on<InviteCodeRoute>().post(call) }
     }
 }
 
