@@ -74,7 +74,9 @@ object AqlQuery {
                 lovesYou: LENGTH(
                     FOR personLove, edge IN OUTBOUND person GRAPH @graph
                         FILTER edge.kind == 'love' AND personLove._id == @person RETURN true
-                ) != 0
+                ) != 0,
+                styles: (FOR personStyle, edge IN OUTBOUND @person GRAPH @graph
+                        FILTER edge.kind == 'link' AND  AND personStyle.kind == 'style' RETURN personStyle)
             }
         )
     """
@@ -169,6 +171,36 @@ object AqlQuery {
         UPDATE { updated: DATE_ISO8601(DATE_NOW()) }
             IN @@collection
             RETURN NEW
+    """
+
+    const val RemoveLink = """
+        FOR link IN @@collection FILTER link.kind == 'link' AND link._from == @from AND link._to == @to
+            REMOVE link IN @@collection OPTIONS { ignoreErrors: true }
+            RETURN link
+    """
+
+    const val AddLink = """UPSERT { kind: 'link', _from: @from, _to: @to }
+        INSERT { kind: 'link', _from: @from, _to: @to, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()) }
+        UPDATE { updated: DATE_ISO8601(DATE_NOW()) }
+            IN @@collection
+            RETURN NEW
+    """
+
+    const val Styles = """
+        FOR style IN @@collection
+            FILTER style.kind == 'style'
+            SORT DATE_TIMESTAMP(style.created) DESC
+            LIMIT 42
+            RETURN style
+    """
+
+    const val StylesWithQuery = """
+        FOR style IN @@collection
+            FILTER style.kind == 'style'
+                AND LIKE(style.name, CONCAT('%', @value, '%'), true)
+            SORT DATE_TIMESTAMP(style.created) DESC
+            LIMIT 42
+            RETURN style
     """
 
     const val HidePerson = """UPSERT { kind: 'hide', _from: @from, _to: @to }

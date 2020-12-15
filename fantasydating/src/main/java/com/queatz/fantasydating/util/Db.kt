@@ -118,6 +118,30 @@ class Db constructor(private val on: On) {
         Love::class.java
     )
 
+    fun addLink(from: String, to: String) = on<Arango>().queryOne(
+        AqlQuery.AddLink,
+        edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
+        Link::class.java
+    )
+
+    fun removeLink(from: String, to: String) = on<Arango>().queryOne(
+        AqlQuery.RemoveLink,
+        edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
+        Link::class.java
+    )
+
+    fun getStyles() = on<Arango>().query(
+        AqlQuery.Styles,
+        params(),
+        Style::class.java
+    )
+
+    fun searchStyles(query: String) = on<Arango>().query(
+        AqlQuery.StylesWithQuery,
+        params(AqlParam.Value to query),
+        Style::class.java
+    )
+
     fun hide(from: String, to: String) = on<Arango>().queryOne(
         AqlQuery.HidePerson,
         edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),

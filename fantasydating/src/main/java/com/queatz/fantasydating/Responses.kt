@@ -7,7 +7,8 @@ data class SuccessResponse constructor(
 
 class PersonWithLove constructor(
     var youLove: Boolean = false,
-    var lovesYou: Boolean = false
+    var lovesYou: Boolean = false,
+    var styles: List<Style> = listOf()
 ) : Person()
 
 data class BossInfo constructor(

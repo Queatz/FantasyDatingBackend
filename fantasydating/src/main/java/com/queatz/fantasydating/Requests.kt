@@ -21,6 +21,16 @@ data class MessageRequest constructor(
     var attachment: String? = null
 )
 
+data class StyleRequest constructor(
+    var name: String? = null,
+    var about: String? = null
+)
+
+data class MeStyleRequest constructor(
+    var link: String? = null,
+    var unlink: String? = null
+)
+
 data class PersonRequest constructor(
     var love: Boolean? = null,
     var report: Boolean? = null,

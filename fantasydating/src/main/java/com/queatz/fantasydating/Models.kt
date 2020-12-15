@@ -2,7 +2,6 @@ package com.queatz.fantasydating
 
 import com.arangodb.entity.DocumentField
 import com.google.gson.annotations.SerializedName
-import com.sun.org.apache.xpath.internal.operations.Bool
 import java.time.Instant
 
 open class BaseModel constructor(val kind: String) {
@@ -51,6 +50,12 @@ open class Person constructor(
     var boss: Boolean = false
 ) : BaseModel("person")
 
+class Style constructor(
+    var creator: String = "",
+    var name: String = "",
+    var about: String = ""
+) : BaseModel("style")
+
 class PersonStory constructor(
     var story: String = "",
     var photo: String = "",
@@ -79,6 +84,8 @@ class Message constructor(
 class Love : EdgeBaseModel("love")
 
 class Hide : EdgeBaseModel("hide")
+
+class Link : EdgeBaseModel("link")
 
 open class Report constructor(
     var person: String = "",
