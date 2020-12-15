@@ -1,6 +1,7 @@
 package com.queatz.fantasydating.routes
 
 import com.queatz.fantasydating.*
+import com.queatz.fantasydating.util.Db
 import com.queatz.fantasydating.util.Me
 import com.queatz.fantasydating.util.Time
 import com.queatz.on.On
@@ -14,6 +15,7 @@ class MeRoute constructor(private val on: On) {
         val me = on<Me>().person
         me.seen = on<Time>().now()
         on<Arango>().save(me)
+        me.styles = on<Db>().getPersonStyles(me.id!!)
         call.respond(me)
     }
 

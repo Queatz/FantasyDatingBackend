@@ -2,11 +2,9 @@ package com.queatz.pushservice
 
 import com.queatz.on.On
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.DefaultRequest
 import io.ktor.client.request.post
-import io.ktor.client.response.HttpResponse
-import io.ktor.client.response.readText
+import io.ktor.client.statement.*
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -21,7 +19,7 @@ class Http constructor(private val on: On) {
         private const val FCM_KEY = "AAAAMB2tK6o:APA91bFlmDFWc8YDOxhvoRUmfvFTnHWQUzPIkvJDjiCB8ZBm2jA7ObdKVEo_vL91ZacLIWJ4KQdqHN01V7XZ834fd3KDEYV_QjwS9ICUl3lIqLX7k9fqYTgjGwswCkGceWDxpW9kLNOz"
     }
 
-    private val client = HttpClient(CIO) {
+    private val client = HttpClient {
         install(DefaultRequest) {
             headers.append(HttpHeaders.Authorization,  "key=$FCM_KEY")
         }

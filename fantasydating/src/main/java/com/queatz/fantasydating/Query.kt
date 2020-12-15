@@ -76,7 +76,7 @@ object AqlQuery {
                         FILTER edge.kind == 'love' AND personLove._id == @person RETURN true
                 ) != 0,
                 styles: (FOR personStyle, edge IN OUTBOUND @person GRAPH @graph
-                        FILTER edge.kind == 'link' AND  AND personStyle.kind == 'style' RETURN personStyle)
+                        FILTER edge.kind == 'link' AND personStyle.kind == 'style' RETURN personStyle)
             }
         )
     """
@@ -121,9 +121,16 @@ object AqlQuery {
                         lovesYou: LENGTH(
                             FOR personLove, edge IN OUTBOUND person GRAPH @graph
                                 FILTER edge.kind == 'love' AND personLove._id == @person RETURN true
-                        ) != 0
+                        ) != 0,
+                        styles: (FOR personStyle, edge IN OUTBOUND @person GRAPH @graph
+                                FILTER edge.kind == 'link' AND personStyle.kind == 'style' RETURN personStyle)
                     }
                 )
+    """
+
+    const val StylesForPerson = """
+        FOR personStyle, edge IN OUTBOUND @person GRAPH @graph
+        FILTER edge.kind == 'link' AND personStyle.kind == 'style' RETURN personStyle
     """
 
     const val PeopleWhoLoveEachOther = """

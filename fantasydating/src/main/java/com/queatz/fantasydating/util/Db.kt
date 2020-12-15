@@ -12,7 +12,7 @@ class Db constructor(private val on: On) {
     fun getPerson(token: String) = on<Arango>().queryOne(
             AqlQuery.UpsertPerson,
             params(AqlParam.Token to token),
-            Person::class.java
+            PersonWithLove::class.java
         )!!
 
     fun <T : Any> getById(id: String, klass: KClass<T>) = on<Arango>().queryOne(
@@ -139,6 +139,12 @@ class Db constructor(private val on: On) {
     fun searchStyles(query: String) = on<Arango>().query(
         AqlQuery.StylesWithQuery,
         params(AqlParam.Value to query),
+        Style::class.java
+    )
+
+    fun getPersonStyles(person: String) = on<Arango>().query(
+        AqlQuery.StylesForPerson,
+        graphParams(AqlParam.Person to on<Arango>().ensureId(person)),
         Style::class.java
     )
 
