@@ -75,7 +75,7 @@ object AqlQuery {
                     FOR personLove, edge IN OUTBOUND person GRAPH @graph
                         FILTER edge.kind == 'love' AND personLove._id == @person RETURN true
                 ) != 0,
-                styles: (FOR personStyle, edge IN OUTBOUND @person GRAPH @graph
+                styles: (FOR personStyle, edge IN OUTBOUND person GRAPH @graph
                         FILTER edge.kind == 'link' AND personStyle.kind == 'style' RETURN personStyle)
             }
         )
@@ -122,7 +122,7 @@ object AqlQuery {
                             FOR personLove, edge IN OUTBOUND person GRAPH @graph
                                 FILTER edge.kind == 'love' AND personLove._id == @person RETURN true
                         ) != 0,
-                        styles: (FOR personStyle, edge IN OUTBOUND @person GRAPH @graph
+                        styles: (FOR personStyle, edge IN OUTBOUND person GRAPH @graph
                                 FILTER edge.kind == 'link' AND personStyle.kind == 'style' RETURN personStyle)
                     }
                 )
