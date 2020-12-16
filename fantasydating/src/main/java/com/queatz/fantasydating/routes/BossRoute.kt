@@ -86,6 +86,10 @@ class BossRoute constructor(private val on: On) {
 
         val person = on<Db>().getById(action.person!!, Person::class) ?: return SuccessResponse(false)
 
+        if (person.approved == action.approve) {
+            return SuccessResponse(false)
+        }
+
         person.approved = action.approve!!
 
         if (action.approve == true) {
