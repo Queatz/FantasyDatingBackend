@@ -45,6 +45,9 @@ class MeRoute constructor(private val on: On) {
                 person.stories = it
             }
             active?.let { person.active = it }
+            stylesOrder?.let {
+                person.stylesOrder = it
+            }
         }
 
         if (needsReview && person.approved) {
