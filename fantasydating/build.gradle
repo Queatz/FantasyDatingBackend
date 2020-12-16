@@ -8,7 +8,7 @@ dependencies {
     implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "io.ktor:ktor-gson:$ktor_version"
     implementation 'ch.qos.logback:logback-classic:1.2.3'
-    implementation 'com.github.Queatz:On:0.1.4'
+    implementation 'com.github.Queatz:On:0.1.6.4'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.arangodb:arangodb-java-driver:6.3.0'
     implementation 'com.arangodb:velocypack-module-jdk8:1.1.0'
