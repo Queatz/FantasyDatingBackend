@@ -76,7 +76,7 @@ object AqlQuery {
                         FILTER edge.kind == 'love' AND personLove._id == @person RETURN true
                 ) != 0,
                 styles: (FOR personStyle, edge IN OUTBOUND person GRAPH @graph
-                        FILTER edge.kind == 'link' AND personStyle.kind == 'style' SORT POSITION(person.stylesOrder || [], personStyle._key) ASC RETURN personStyle)
+                        FILTER edge.kind == 'link' AND personStyle.kind == 'style' SORT POSITION(person.stylesOrder || [], personStyle._key, true) ASC RETURN personStyle)
             }
         )
     """
