@@ -65,6 +65,7 @@ fun Application.main() {
         post("/boss/{action}") { on<BossRoute>().post(call) }
         post("/phone") { on<PhoneRoute>().post(call) }
         post("/invite") { on<InviteCodeRoute>().post(call) }
+        post("/invite/{id}") { on<InviteCodeRoute>().post(call) }
         post("/style") { on<StyleRoute>().post(call) }
     }
 }
