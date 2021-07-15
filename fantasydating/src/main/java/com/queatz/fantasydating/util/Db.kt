@@ -130,6 +130,30 @@ class Db constructor(private val on: On) {
         Link::class.java
     )
 
+    fun dismissStyle(from: String, to: String) = on<Arango>().queryOne(
+        AqlQuery.DismissStyle,
+        edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
+        StylePreference::class.java
+    )
+
+    fun undismissStyle(from: String, to: String) = on<Arango>().queryOne(
+        AqlQuery.UndismissStyle,
+        edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
+        StylePreference::class.java
+    )
+
+    fun promoteStyle(from: String, to: String) = on<Arango>().queryOne(
+        AqlQuery.PromoteStyle,
+        edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
+        StylePreference::class.java
+    )
+
+    fun demoteStyle(from: String, to: String) = on<Arango>().queryOne(
+        AqlQuery.DemoteStyle,
+        edgeParams(AqlParam.From to on<Arango>().ensureId(from), AqlParam.To to on<Arango>().ensureId(to)),
+        StylePreference::class.java
+    )
+
     fun getStyles() = on<Arango>().query(
         AqlQuery.Styles,
         params(),

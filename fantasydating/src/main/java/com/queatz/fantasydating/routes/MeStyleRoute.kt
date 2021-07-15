@@ -23,10 +23,30 @@ class MeStyleRoute constructor(private val on: On) {
 
                     call.respond(SuccessResponse(success))
                 }
+                promote != null -> {
+                    val success = on<Db>().promoteStyle(on<Me>().person.id!!, promote!!) != null
+
+                    call.respond(SuccessResponse(success))
+                }
+                demote != null -> {
+                    val success = on<Db>().demoteStyle(on<Me>().person.id!!, demote!!) != null
+
+                    call.respond(SuccessResponse(success))
+                }
+                dismiss != null -> {
+                    val success = on<Db>().dismissStyle(on<Me>().person.id!!, dismiss!!) != null
+
+                    call.respond(SuccessResponse(success))
+                }
+                undismiss != null -> {
+                    val success = on<Db>().undismissStyle(on<Me>().person.id!!, undismiss!!) != null
+
+                    call.respond(SuccessResponse(success))
+                }
                 else -> {
+                    call.respond(SuccessResponse(false))
                 }
             }
-
         }
     }
 }

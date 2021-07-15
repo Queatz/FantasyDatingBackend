@@ -87,6 +87,11 @@ class Hide : EdgeBaseModel("hide")
 
 class Link : EdgeBaseModel("link")
 
+class StylePreference : EdgeBaseModel("style-preference") {
+    var favor: Float = 0f
+    var dismissed: Boolean? = null
+}
+
 open class Report constructor(
     var person: String = "",
     var reporter: String = "",

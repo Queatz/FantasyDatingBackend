@@ -29,7 +29,11 @@ data class StyleRequest constructor(
 
 data class MeStyleRequest constructor(
     var link: String? = null,
-    var unlink: String? = null
+    var unlink: String? = null,
+    var promote: String? = null,
+    var demote: String? = null,
+    var dismiss: String? = null,
+    var undismiss: String? = null
 )
 
 data class PersonRequest constructor(

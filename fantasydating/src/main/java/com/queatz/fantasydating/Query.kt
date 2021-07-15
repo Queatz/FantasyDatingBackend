@@ -61,6 +61,7 @@ object AqlQuery {
             LIMIT 20
             RETURN message
     """
+
     const val PersonForPerson = """
         LET person = DOCUMENT(@id)
         
@@ -109,7 +110,18 @@ object AqlQuery {
                 )
                 AND person.age >= @min
                 AND person.age <= @max
-                SORT DATE_TIMESTAMP(person.seen) DESC
+                AND LENGTH(
+                    FOR style, edge IN OUTBOUND person GRAPH @graph
+                            FILTER edge.kind == 'link' AND style.kind == 'style'
+                        FOR stylePreference, stylePreferenceEdge IN OUTBOUND @person GRAPH @graph
+                                FILTER stylePreferenceEdge._to == style._id AND stylePreferenceEdge.kind == 'style-preference' AND stylePreferenceEdge.dismissed == true RETURN true
+                ) == 0
+                SORT SUM(
+                    FOR style, edge IN OUTBOUND person GRAPH @graph
+                            FILTER edge.kind == 'link' AND style.kind == 'style'
+                        FOR stylePreference, stylePreferenceEdge IN OUTBOUND @person GRAPH @graph
+                                FILTER stylePreferenceEdge._to == style._id AND stylePreferenceEdge.kind == 'style-preference' AND stylePreferenceEdge.dismissed != true RETURN stylePreferenceEdge.favor
+                ) DESC, DATE_TIMESTAMP(person.seen) DESC
                 LIMIT 20
                 RETURN MERGE(
                     person,
@@ -209,6 +221,34 @@ object AqlQuery {
             SORT DATE_TIMESTAMP(style.created) DESC
             LIMIT 42
             RETURN style
+    """
+
+    const val DismissStyle = """UPSERT { kind: 'style-preference', _from: @from, _to: @to }
+        INSERT { kind: 'style-preference', _from: @from, _to: @to, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()), favor: 0 }
+        UPDATE { dismissed: true, updated: DATE_ISO8601(DATE_NOW()) }
+            IN @@collection
+            RETURN NEW
+    """
+
+    const val UndismissStyle = """UPSERT { kind: 'style-preference', _from: @from, _to: @to }
+        INSERT { kind: 'style-preference', _from: @from, _to: @to, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()), favor: 0 }
+        UPDATE { dismissed: false, updated: DATE_ISO8601(DATE_NOW()) }
+            IN @@collection
+            RETURN NEW
+    """
+
+    const val PromoteStyle = """UPSERT { kind: 'style-preference', _from: @from, _to: @to }
+        INSERT { kind: 'style-preference', _from: @from, _to: @to, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()), favor: 1 }
+        UPDATE { favor: OLD.favor + 1, updated: DATE_ISO8601(DATE_NOW()) }
+            IN @@collection
+            RETURN NEW
+    """
+
+    const val DemoteStyle = """UPSERT { kind: 'style-preference', _from: @from, _to: @to }
+        INSERT { kind: 'style-preference', _from: @from, _to: @to, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()), favor: -1 }
+        UPDATE { favor: OLD.favor - 1, updated: DATE_ISO8601(DATE_NOW()) }
+            IN @@collection
+            RETURN NEW
     """
 
     const val HidePerson = """UPSERT { kind: 'hide', _from: @from, _to: @to }
