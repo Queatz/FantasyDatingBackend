@@ -224,7 +224,7 @@ object AqlQuery {
     """
 
     const val DismissStyle = """UPSERT { kind: 'style-preference', _from: @from, _to: @to }
-        INSERT { kind: 'style-preference', _from: @from, _to: @to, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()), favor: 0 }
+        INSERT { kind: 'style-preference', _from: @from, _to: @to, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()), dismissed: true, favor: 0 }
         UPDATE { dismissed: true, updated: DATE_ISO8601(DATE_NOW()) }
             IN @@collection
             RETURN NEW
