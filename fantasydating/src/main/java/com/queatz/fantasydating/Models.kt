@@ -50,7 +50,7 @@ open class Person constructor(
     var boss: Boolean = false
 ) : BaseModel("person")
 
-class Style constructor(
+open class Style constructor(
     var creator: String = "",
     var name: String = "",
     var about: String = ""

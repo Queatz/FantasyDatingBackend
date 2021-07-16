@@ -12,10 +12,12 @@ class StyleRoute constructor(private val on: On) {
     suspend fun get(call: ApplicationCall) {
         if (on<Validate>().respond(call)) return
 
+        val includePreference = call.request.queryParameters["favor"]?.toBoolean() ?: false
+
         call.request.queryParameters["search"]?.let {
-            call.respond(on<Db>().searchStyles(it))
+            call.respond(if (includePreference) on<Db>().searchStylesWithPreference(on<Me>().person.id!!, it) else on<Db>().searchStyles(it))
         } ?: run {
-            call.respond(on<Db>().getStyles())
+            call.respond(if (includePreference) on<Db>().getStylesWithPreference(on<Me>().person.id!!) else on<Db>().getStyles())
         }
     }
 

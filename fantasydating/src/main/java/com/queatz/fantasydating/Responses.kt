@@ -12,6 +12,10 @@ class PersonWithLove constructor(
     var stylesOrder: List<String> = listOf()
 ) : Person()
 
+class StyleWithPreference constructor(
+    var preference: StylePreference? = null
+) : Style()
+
 data class BossInfo constructor(
     val approvals: Int,
     val reports: Int

@@ -166,6 +166,18 @@ class Db constructor(private val on: On) {
         Style::class.java
     )
 
+    fun getStylesWithPreference(person: String) = on<Arango>().query(
+        AqlQuery.StylesWithPreference,
+        graphCollectionParams(AqlParam.Person to on<Arango>().ensureId(person)),
+        StyleWithPreference::class.java
+    )
+
+    fun searchStylesWithPreference(person: String, query: String) = on<Arango>().query(
+        AqlQuery.StylesWithPreferenceWithQuery,
+        graphCollectionParams(AqlParam.Person to on<Arango>().ensureId(person), AqlParam.Value to query),
+        StyleWithPreference::class.java
+    )
+
     fun getPersonStyles(person: String) = on<Arango>().query(
         AqlQuery.StylesForPerson,
         graphParams(AqlParam.Person to on<Arango>().ensureId(person)),

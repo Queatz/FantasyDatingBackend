@@ -223,6 +223,33 @@ object AqlQuery {
             RETURN style
     """
 
+    const val StylesWithPreference = """
+        FOR style IN @@collection
+            FILTER style.kind == 'style'
+            SORT DATE_TIMESTAMP(style.created) DESC
+            LIMIT 42
+            RETURN MERGE(style, {
+                preference: FIRST(FOR stylePreference, stylePreferenceEdge IN OUTBOUND @person GRAPH @graph
+                            FILTER stylePreferenceEdge._to == style._id 
+                                AND stylePreferenceEdge.kind == 'style-preference'
+                            RETURN stylePreferenceEdge)
+            })
+    """
+
+    const val StylesWithPreferenceWithQuery = """
+        FOR style IN @@collection
+            FILTER style.kind == 'style'
+                AND LIKE(style.name, CONCAT('%', @value, '%'), true)
+            SORT DATE_TIMESTAMP(style.created) DESC
+            LIMIT 42
+            RETURN MERGE(style, {
+                preference: FIRST(FOR stylePreference, stylePreferenceEdge IN OUTBOUND @person GRAPH @graph
+                            FILTER stylePreferenceEdge._to == style._id 
+                                AND stylePreferenceEdge.kind == 'style-preference'
+                            RETURN stylePreferenceEdge)
+            })
+    """
+
     const val DismissStyle = """UPSERT { kind: 'style-preference', _from: @from, _to: @to }
         INSERT { kind: 'style-preference', _from: @from, _to: @to, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()), dismissed: true, favor: 0 }
         UPDATE { dismissed: true, updated: DATE_ISO8601(DATE_NOW()) }
