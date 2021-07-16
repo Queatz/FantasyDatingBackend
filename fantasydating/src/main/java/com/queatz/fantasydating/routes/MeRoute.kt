@@ -13,8 +13,6 @@ import kotlin.math.max
 class MeRoute constructor(private val on: On) {
     suspend fun get(call: ApplicationCall) {
         val me = on<Me>().person
-        me.seen = on<Time>().now()
-        on<Arango>().save(me)
         me.styles = on<Db>().getPersonStyles(me.id!!)
         call.respond(me)
     }

@@ -27,10 +27,16 @@ object AqlQuery {
 
     const val UpsertPerson = """
         UPSERT { kind: 'person', token: @token }
-            INSERT { kind: 'person', sex: 'Person', age: 18, token: @token, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()) }
-            UPDATE { updated: DATE_ISO8601(DATE_NOW()) }
+            INSERT { kind: 'person', sex: 'Person', age: 18, token: @token, created: DATE_ISO8601(DATE_NOW()), updated: DATE_ISO8601(DATE_NOW()), seen: DATE_ISO8601(DATE_NOW()) }
+            UPDATE { updated: DATE_ISO8601(DATE_NOW()), seen: DATE_ISO8601(DATE_NOW()) }
             IN @@collection
             RETURN NEW
+    """
+
+    const val PersonByToken = """
+        FOR person IN @@collection
+            FILTER person.kind == 'person' AND person.token == @token
+            RETURN person
     """
 
     const val DiscoveryPreferencesForPerson = """
