@@ -51,7 +51,7 @@ class PersonRoute constructor(private val on: On) {
                     if (love == true && success && person.lovesYou) {
                         run {
                             val event = Event()
-                            event.name = "You and ${person.name} like each other"
+                            event.name = "You and ${person.name} qimates"
                             event.person = on<Me>().person.id!!
                             event.data = on<Json>().to(LoveEventType(person.id!!))
                             on<Arango>().save(event)
@@ -59,7 +59,7 @@ class PersonRoute constructor(private val on: On) {
 
                         run {
                             val event = Event()
-                            event.name = "You and ${on<Me>().person.name} like each other"
+                            event.name = "You and ${on<Me>().person.name} qimates"
                             event.person = person.id!!
                             event.data = on<Json>().to(LoveEventType(on<Me>().person.id!!))
                             on<Arango>().save(event)

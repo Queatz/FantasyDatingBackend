@@ -232,13 +232,14 @@ object AqlQuery {
     const val StylesWithPreference = """
         FOR style IN @@collection
             FILTER style.kind == 'style'
-            SORT DATE_TIMESTAMP(style.created) DESC
-            LIMIT 42
-            RETURN MERGE(style, {
-                preference: FIRST(FOR stylePreference, stylePreferenceEdge IN OUTBOUND @person GRAPH @graph
+            LET preference = FIRST(FOR stylePreference, stylePreferenceEdge IN OUTBOUND @person GRAPH @graph
                             FILTER stylePreferenceEdge._to == style._id 
                                 AND stylePreferenceEdge.kind == 'style-preference'
                             RETURN stylePreferenceEdge)
+            SORT preference.favor DESC, DATE_TIMESTAMP(style.created) DESC
+            LIMIT 42
+            RETURN MERGE(style, {
+                preference: preference
             })
     """
 
@@ -246,13 +247,14 @@ object AqlQuery {
         FOR style IN @@collection
             FILTER style.kind == 'style'
                 AND LIKE(style.name, CONCAT('%', @value, '%'), true)
-            SORT DATE_TIMESTAMP(style.created) DESC
-            LIMIT 42
-            RETURN MERGE(style, {
-                preference: FIRST(FOR stylePreference, stylePreferenceEdge IN OUTBOUND @person GRAPH @graph
+            LET preference = FIRST(FOR stylePreference, stylePreferenceEdge IN OUTBOUND @person GRAPH @graph
                             FILTER stylePreferenceEdge._to == style._id 
                                 AND stylePreferenceEdge.kind == 'style-preference'
                             RETURN stylePreferenceEdge)
+            SORT preference.favor DESC, DATE_TIMESTAMP(style.created) DESC
+            LIMIT 42
+            RETURN MERGE(style, {
+                preference: preference
             })
     """
 
