@@ -113,7 +113,7 @@ class Arango constructor(private val on: On) {
     }
 
     fun <T : BaseModel> delete(model: T): Boolean {
-        on<Arango>().db().collection(DB_COLLECTION_ENTITIES).deleteDocument(model.id)
+        db().collection(DB_COLLECTION_ENTITIES).deleteDocument(model.id)
         return true
     }
 
@@ -124,10 +124,10 @@ class Arango constructor(private val on: On) {
             if (model.id == null) {
                 model.created = on<Time>().now()
 
-                on<Arango>().db().collection(DB_COLLECTION_ENTITIES)
+                db().collection(DB_COLLECTION_ENTITIES)
                     .insertDocument(model, DocumentCreateOptions().returnNew(true)).new
             } else {
-                on<Arango>().db().collection(DB_COLLECTION_ENTITIES)
+                db().collection(DB_COLLECTION_ENTITIES)
                     .updateDocument(model.id, model, DocumentUpdateOptions().returnNew(true)).new
             }
         } catch (e: ArangoDBException) {

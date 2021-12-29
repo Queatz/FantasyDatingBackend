@@ -12,7 +12,7 @@ class Rnd constructor(private val on: On) {
         for (i in 0 until length) {
             val x = abs(random.nextInt()) % 36
             if (x < 26) {
-                str.append((x + 'a'.toInt()).toChar())
+                str.append((x + 'a'.code).toChar())
             } else {
                 str.append(x - 26)
             }

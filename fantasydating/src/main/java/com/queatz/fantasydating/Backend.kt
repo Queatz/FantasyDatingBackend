@@ -16,13 +16,11 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.util.AttributeKey
-import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.pipeline.PipelineContext
 import java.time.Instant
 
 val OnAttributeKey = AttributeKey<On>("On")
 
-@KtorExperimentalAPI
 fun Application.main() {
     install(DefaultHeaders)
     install(Compression)

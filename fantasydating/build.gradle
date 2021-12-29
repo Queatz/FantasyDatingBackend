@@ -7,11 +7,11 @@ dependencies {
     implementation "io.ktor:ktor-server-core:$ktor_version"
     implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "io.ktor:ktor-gson:$ktor_version"
-    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'ch.qos.logback:logback-classic:1.2.9'
     implementation 'com.github.Queatz:On:0.1.6.4'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.arangodb:arangodb-java-driver:6.3.0'
-    implementation 'com.arangodb:velocypack-module-jdk8:1.1.0'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.arangodb:arangodb-java-driver:6.14.0'
+    implementation 'com.arangodb:velocypack-module-jdk8:1.1.1'
     implementation group: 'com.googlecode.libphonenumber', name: 'libphonenumber', version: '8.9.2'
 }
 
